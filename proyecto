@@ -1,0 +1,507 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+#include <algorithm>
+
+using namespace std;
+
+// Clase base para Libro, Usuario y Bibliotecario
+class Entidad {
+public:
+	virtual string getNombre() const = 0;
+	virtual string getApellido() const = 0;
+	virtual void imprimirDatos() const = 0;
+	virtual ~Entidad() {}
+};
+
+// Definición de la clase Libro
+class Libro : public Entidad {
+private:
+	string titulo;
+	string autor;
+	string ISBN;
+	int anioPublicacion;
+	string condicion;
+	string genero;
+	string idioma;
+	string recomendacionEdad;
+	
+public:
+	// Constructor
+	Libro() {}
+	
+	// Constructor con parámetros
+	Libro(const string& tit, const string& aut, const string& isbn, int anio, const string& cond, const string& gen, const string& idi, const string& recEdad)
+		: titulo(tit), autor(aut), ISBN(isbn), anioPublicacion(anio), condicion(cond), genero(gen), idioma(idi), recomendacionEdad(recEdad) {}
+	
+	// Función para imprimir datos del libro
+	void imprimirDatos() const override {
+		cout << "----------------------------------" << endl;
+		cout << "Título:" << titulo << endl;
+		cout << "Autor:" << autor << endl;
+		cout << "ISBN:" << ISBN << endl;
+		cout << "Año de publicación:" << anioPublicacion << endl;
+		cout << "Condición:" << condicion << endl;
+		cout << "Género:" << genero << endl;
+		cout << "Idioma:" << idioma << endl;
+		cout << "Recomendación de edad:" << recomendacionEdad << endl;
+		cout << "----------------------------------" << endl;
+	}
+	
+	// Getter para el título
+	string getNombre() const override {
+		return titulo;
+	}
+	
+	// Getter para el autor
+	string getApellido() const override {
+		return autor;
+	}
+	
+	// Getters para los miembros privados de la clase Libro
+	string getISBN() const {
+		return ISBN;
+	}
+	
+	int getAnioPublicacion() const {
+		return anioPublicacion;
+	}
+	
+	string getCondicion() const {
+		return condicion;
+	}
+	
+	string getGenero() const {
+		return genero;
+	}
+	
+	string getIdioma() const {
+		return idioma;
+	}
+	
+	string getRecomendacionEdad() const {
+		return recomendacionEdad;
+	}
+};
+
+// Definición de la clase Usuario
+class Usuario : public Entidad {
+private:
+	int IDUsuario; // Agregamos un ID de usuario
+	string nombre;
+	string apellido;
+	string correoElectronico;
+	string genero;
+	
+public:
+	// Constructor predeterminado
+	Usuario() {}
+	
+	// Constructor con parámetros
+	Usuario(int id, const string& nom, const string& ape, const string& correo, const string& gen)
+		: IDUsuario(id), nombre(nom), apellido(ape), correoElectronico(correo), genero(gen) {}
+	
+	// Función para imprimir datos del usuario
+	void imprimirDatos() const override {
+		cout << "----------------------------------" << endl;
+		cout << "Nombre: " << nombre << endl;
+		cout << "Apellido: " << apellido << endl;
+		cout << "Correo electrónico: " << correoElectronico << endl;
+		cout << "ID de usuario: " << IDUsuario << endl; // Imprimimos el ID de usuario
+		cout << "Género: " << genero << endl;
+		cout << "----------------------------------" << endl;
+	}
+	
+	// Getter para el nombre
+	string getNombre() const override {
+		return nombre;
+	}
+	
+	// Getter para el apellido
+	string getApellido() const override {
+		return apellido;
+	}
+	
+	// Getter para el correo electrónico
+	string getCorreoElectronico() const {
+		return correoElectronico;
+	}
+	
+	// Getter para el ID de usuario
+	int getIDUsuario() const {
+		return IDUsuario;
+	}
+	
+	// Getter para el género
+	string getGenero() const {
+		return genero;
+	}
+};
+
+// Definición de la clase Bibliotecario
+class Bibliotecario : public Entidad {
+private:
+	int IDEmpleado; // Agregamos un ID de empleado
+	string nombre;
+	string apellido;
+	string correoElectronico;
+	string turnoLaboral;
+	
+public:
+	// Constructor predeterminado
+	Bibliotecario() {}
+	
+	// Constructor con parámetros
+	Bibliotecario(int id, const string& nom, const string& ape, const string& correo, const string& turno)
+		: IDEmpleado(id), nombre(nom), apellido(ape), correoElectronico(correo), turnoLaboral(turno) {}
+	
+	// Función para imprimir datos del bibliotecario
+	void imprimirDatos() const override {
+		cout << "----------------------------------" << endl;    
+		cout << "Nombre: " << nombre << endl;
+		cout << "Apellido: " << apellido << endl;
+		cout << "Correo electrónico: " << correoElectronico << endl;
+		cout << "ID de empleado: " << IDEmpleado << endl; // Imprimimos el ID de empleado
+		cout << "Turno laboral: " << turnoLaboral << endl;
+		cout << "----------------------------------" << endl;
+	}
+	
+	// Getter para el nombre
+	string getNombre() const override {
+		return nombre;
+	}
+	
+	// Getter para el apellido
+	string getApellido() const override {
+		return apellido;
+	}
+	
+	// Getter para el correo electrónico
+	string getCorreoElectronico() const {
+		return correoElectronico;
+	}
+	
+	// Getter para el ID de empleado
+	int getIDEmpleado() const {
+		return IDEmpleado;
+	}
+	
+	// Getter para el turno laboral
+	string getTurnoLaboral() const {
+		return turnoLaboral;
+	}
+};
+
+// Función para generar datos aleatorios para un libro
+void generarDatos(Libro& libro) {
+	const string titulos[] = { "Aprende C    ", "Aprende PHP  ", "Aprende Linux", "Aprende lol  ", "Libro Python  ", "Aprender Vida " };
+	const string autores[] = { "Autor1", "Autor2", "Autor3" };
+	const string condiciones[] = { "Nuevo   ", "Usado   ", "Coleccion", "Como nuevo"};
+	const string generos[] = { "Misterio  ", "C. ficción", "Romance   ", "R. mágico ", "Fantasía  " };
+	const string idiomas[] = { "Inglés   ", "Español ", "Francés ", "Alemán  ", "Italiano" };
+	const string recomendacionesEdad[] = { "12+", "18+", "Todas las edades", "16+", "8+" };
+	
+	libro = Libro(titulos[rand() % 6], autores[rand() % 3], to_string(rand() % 5 + 1), rand() % 30 + 1990,
+				  condiciones[rand() % 4], generos[rand() % 5], idiomas[rand() % 5], recomendacionesEdad[rand() % 5]);
+}
+
+// Función para generar datos aleatorios para un usuario
+void generarDatos(Usuario& usuario) {
+	const string nombres[] = { "Juan", "Maria", "Carlos","Alexander","Fernando","Jared" };
+	const string apellidos[] = { "Gonzalez", "Martinez", "Lopez","Bravo","Mamani"};
+	const string genero[] = { "Masculino", "Femenino", "No binario" };
+	
+	usuario = Usuario(rand() % 5 + 1, nombres[rand() % 6], apellidos[rand() % 5],
+					  nombres[rand() % 3] + apellidos[rand() % 3] + "@example.com", genero[rand() % 3]);
+}
+
+// Función para generar datos aleatorios para un bibliotecario
+void generarDatos(Bibliotecario& bibliotecario) {
+	const string nombres[] = { "Alex", "Ana", "Roberto", "Daniel","Leo","Natalia" };
+	const string apellidos[] = { "Vilar", "Perez", "Mejia","Gomez","Rojas" };
+	const string turnos[] = { "Mañana", "Tarde", "Noche" };
+	
+	bibliotecario = Bibliotecario(rand() % 100, nombres[rand() % 6], apellidos[rand() % 5],
+								  nombres[rand() % 3] + apellidos[rand() % 3] + "@library.com", turnos[rand() % 3]);
+}
+
+// Función para listar objetos en formato de tabla
+void listarObjetosTabla(const Entidad* objetos[], int size, char tipo) {
+	if (tipo == 'L') {
+		cout << "Libro\t\tTítulo\t\t\tAutor\t\tISBN\t  Año de publicación\tCondición\t  Género\t\tIdioma\t\tRecomendación de edad" << endl;
+		for (int i = 0; i < size; ++i) {
+			cout <<"  "<< i + 1 << "\t\t" << objetos[i]->getNombre() << "\t\t" << objetos[i]->getApellido() << "\t\t  "
+				<< static_cast<const Libro*>(objetos[i])->getISBN() << "\t\t" << static_cast<const Libro*>(objetos[i])->getAnioPublicacion()
+				<< "\t\t" << static_cast<const Libro*>(objetos[i])->getCondicion() << "\t  " << static_cast<const Libro*>(objetos[i])->getGenero()
+				<< "\t\t" << static_cast<const Libro*>(objetos[i])->getIdioma() << "\t\t" << static_cast<const Libro*>(objetos[i])->getRecomendacionEdad() << endl;
+		}
+	}
+	
+	else if (tipo == 'U') {
+		cout << "Usuario\t\tNombre\t\tApellido\t\tCorreo electrónico\t\tID de usuario\t\tGénero" << endl;
+		for (int i = 0; i < size; ++i) {
+			cout <<"  "<< setw(14)<< left << i + 1 << setw(16) << left << objetos[i]->getNombre()
+				<< setw(24) << left << objetos[i]->getApellido() << setw(37) << left << static_cast<const Usuario*>(objetos[i])->getCorreoElectronico()
+				<< setw(19) << left << static_cast<const Usuario*>(objetos[i])->getIDUsuario()
+				<< setw(25) << left << static_cast<const Usuario*>(objetos[i])->getGenero() << endl;
+		}
+	}
+	else if (tipo == 'B') {
+		cout << "Bibliotecario\t\tNombre\t\tApellido\tCorreo electrónico\t\tID de empleado\t\tTurno laboral" << endl;
+		for (int i = 0; i < size; ++i) {
+			cout <<"     "<< setw(19) << left << i + 1 << setw(16) << left << objetos[i]->getNombre()
+				<< setw(16) << left << objetos[i]->getApellido() << setw(38) << left << static_cast<const Bibliotecario*>(objetos[i])->getCorreoElectronico()
+				<< setw(18) << left << static_cast<const Bibliotecario*>(objetos[i])->getIDEmpleado()
+				<< setw(25) << left << static_cast<const Bibliotecario*>(objetos[i])->getTurnoLaboral() << endl;
+		}
+	}
+}
+
+// Función para listar objetos en bloque
+void listarObjetosBloque(const Entidad* objetos[], int size) {
+	cout << "Listado:" << endl;
+	for (int i = 0; i < size; ++i) {
+		objetos[i]->imprimirDatos();
+	}
+}
+
+
+void buscarYListarPorNombreApellido(const Entidad* objetos[], int size, const string& nombreApellido) {
+	// Convertir el nombre de búsqueda a minúsculas para hacer la comparación
+	string nombreApellidoMinusculas = nombreApellido;
+	transform(nombreApellidoMinusculas.begin(), nombreApellidoMinusculas.end(), nombreApellidoMinusculas.begin(), ::tolower);
+	
+	// Preguntar al usuario si desea imprimir los resultados en bloque
+	char opcionImprimir;
+	cout << "¿Desea imprimir los resultados en bloque? (s/n): ";
+	cin >> opcionImprimir;
+	
+	cout << "Resultados de la búsqueda por nombre o apellido \"" << nombreApellido << "\":" << endl;
+	bool encontrado = false;
+	for (int i = 0; i < size; ++i) {
+		string nombreCompleto = objetos[i]->getNombre() + " " + objetos[i]->getApellido();
+		transform(nombreCompleto.begin(), nombreCompleto.end(), nombreCompleto.begin(), ::tolower); // Convertir a minúsculas
+		if (nombreCompleto.find(nombreApellidoMinusculas) != string::npos) { // Utilizar nombreApellidoMinusculas en la comparación
+			objetos[i]->imprimirDatos();
+			encontrado = true;
+		}
+	}
+	if (!encontrado) {
+		cout << "No se encontraron resultados para el nombre o apellido \"" << nombreApellido << "\"." << endl;
+		return;
+	}
+	
+	if (opcionImprimir == 's' || opcionImprimir == 'S') {
+		// No necesitamos hacer nada más aquí, ya hemos impreso los resultados
+	} else {
+		// Imprimir en formato de tabla
+		cout << "Imprimiendo en formato de tabla:" << endl;
+		// Imprimimos solo una vez
+		cout << "Libro\t\tTítulo\t\t\tAutor\t\tISBN\t  Año de publicación\tCondición\t  Género\t\tIdioma\t\tRecomendación de edad" << endl;
+		for (int i = 0; i < size; ++i) {
+			string nombreCompleto = objetos[i]->getNombre() + " " + objetos[i]->getApellido();
+			transform(nombreCompleto.begin(), nombreCompleto.end(), nombreCompleto.begin(), ::tolower); // Convertir a minúsculas
+			if (nombreCompleto.find(nombreApellidoMinusculas) != string::npos) { // Utilizar nombreApellidoMinusculas en la comparación
+				cout <<"  "<< i + 1 << "\t\t" << objetos[i]->getNombre() << "\t\t" << objetos[i]->getApellido() << "\t\t  "
+					<< static_cast<const Libro*>(objetos[i])->getISBN() << "\t\t" << static_cast<const Libro*>(objetos[i])->getAnioPublicacion()
+					<< "\t\t" << static_cast<const Libro*>(objetos[i])->getCondicion() << "\t  " << static_cast<const Libro*>(objetos[i])->getGenero()
+					<< "\t\t" << static_cast<const Libro*>(objetos[i])->getIdioma() << "\t\t" << static_cast<const Libro*>(objetos[i])->getRecomendacionEdad() << endl;
+			}
+		}
+	}
+}
+
+
+int main() {
+	// Inicializar la semilla para la generación de números aleatorios
+	srand(time(0));
+	
+	// Número de libros, usuarios y bibliotecarios
+	const int numLibros = 20;
+	const int numUsuarios = 20;
+	const int numBibliotecarios = 20;
+	
+	// Arreglos para almacenar libros, usuarios y bibliotecarios
+	Libro* libros[numLibros];
+	Usuario* usuarios[numUsuarios];
+	Bibliotecario* bibliotecarios[numBibliotecarios];
+	
+	// Menú principal
+	char opcion;
+	bool datosLlenados = false; // Variable para verificar si se han llenado los datos
+	
+	do {
+		cout << "Menu Principal" << endl;
+		cout << "1) LLenado de Datos" << endl;
+		cout << "2) Listados" << endl;
+		cout << "3) Busquedas" << endl;
+		cout << "0) Salir" << endl;
+		cout << "Seleccione su opción: ";
+		cin >> opcion;
+		
+		switch (opcion) {
+		case '1':
+			// Opción de llenado de datos
+			for (int i = 0; i < numLibros; ++i) {
+				libros[i] = new Libro();
+				generarDatos(*libros[i]);
+			}
+			for (int i = 0; i < numUsuarios; ++i) {
+				usuarios[i] = new Usuario();
+				generarDatos(*usuarios[i]);
+			}
+			for (int i = 0; i < numBibliotecarios; ++i) {
+				bibliotecarios[i] = new Bibliotecario();
+				generarDatos(*bibliotecarios[i]);
+			}
+			datosLlenados = true; // Marcar que los datos se han llenado
+			cout<<"Datos Llenados Correctamente"<<endl;
+			break;
+			
+		case '2':
+			// Submenú para listar libros, usuarios y bibliotecarios
+			if (!datosLlenados) {
+				cout << "Error: primero debe llenar los datos en la opción 1." << endl;
+				break;
+			}
+			char subOpcionListado;
+			do {
+				cout << "\nSubmenú Listado" << endl;
+				cout << "A) Listar libros" << endl;
+				cout << "B) Listar usuarios" << endl;
+				cout << "C) Listar bibliotecarios" << endl;
+				cout << "X) Salir" << endl;
+				cout << "Seleccione su opción: ";
+				cin >> subOpcionListado;
+				
+				switch (subOpcionListado) {
+					
+				case 'A':
+				case 'a':
+					// Preguntar si desea listar los libros en bloque o en formato de tabla
+					char opcionListado;
+					cout << "¿Desea listar los libros en bloque? (s/n): ";
+					cin >> opcionListado;
+					if (opcionListado == 's' || opcionListado == 'S') {
+						listarObjetosBloque((const Entidad**)libros, numLibros);
+					}
+					else {
+						listarObjetosTabla((const Entidad**)libros, numLibros, 'L');
+					}
+					break;
+				case 'B':
+				case 'b':
+					// Preguntar si desea listar los usuarios en bloque o en formato de tabla
+					cout << "¿Desea listar los usuarios en bloque? (s/n): ";
+					cin >> opcionListado;
+					if (opcionListado == 's' || opcionListado == 'S') {
+						listarObjetosBloque((const Entidad**)usuarios, numUsuarios);
+					}
+					else {
+						listarObjetosTabla((const Entidad**)usuarios, numUsuarios, 'U');
+					}
+					break;
+				case 'C':
+				case 'c':
+					// Preguntar si desea listar los bibliotecarios en bloque o en formato de tabla
+					cout << "¿Desea listar los bibliotecarios en bloque? (s/n): ";
+					cin >> opcionListado;
+					if (opcionListado == 's' || opcionListado == 'S') {
+						listarObjetosBloque((const Entidad**)bibliotecarios, numBibliotecarios);
+					}
+					else {
+						listarObjetosTabla((const Entidad**)bibliotecarios, numBibliotecarios, 'B');
+					}
+					break;
+					
+				case 'X':
+				case 'x':
+					// Salir del submenú de listados y volver al menú principal
+					break;
+				default:
+					cout << "Opción no válida. Inténtelo de nuevo." << endl;
+					break;
+				}
+			} while (subOpcionListado != 'X' && subOpcionListado != 'x');
+			break;
+		case '3':
+			// Submenú para buscar libros por título, usuarios por nombre/apellido y bibliotecarios por nombre/apellido
+			char subOpcionBusqueda;
+			do {
+				cout << "\nSubmenú Búsqueda" << endl;
+				cout << "A) Buscar libro por título" << endl;
+				cout << "B) Buscar usuario por nombre o apellido" << endl;
+				cout << "C) Buscar bibliotecario por nombre o apellido" << endl;
+				cout << "X) Salir" << endl;
+				cout << "Seleccione su opción: ";
+				cin >> subOpcionBusqueda;
+				
+				switch (subOpcionBusqueda) {
+				case 'A':
+				case 'a':
+					// Búsqueda de libros por título
+				{
+					string titulo;
+					cout << "Introduce el título del libro a buscar: ";
+					cin.ignore();
+					getline(cin, titulo);
+					buscarYListarPorNombreApellido((const Entidad**)libros, numLibros, titulo);
+				}
+				break;
+				case 'B':
+				case 'b':
+					// Búsqueda de usuario por nombre o apellido
+				{
+					string nombreApellido;
+					cout << "Introduce el nombre o apellido del usuario a buscar: ";
+					cin.ignore();
+					getline(cin, nombreApellido);
+					buscarYListarPorNombreApellido((const Entidad**)usuarios, numUsuarios, nombreApellido);
+				}
+				break;
+				case 'C':
+				case 'c':
+					// Búsqueda de bibliotecario por nombre o apellido
+				{
+					string nombreApellido;
+					cout << "Introduce el nombre o apellido del bibliotecario a buscar: ";
+					cin.ignore();
+					getline(cin, nombreApellido);
+					buscarYListarPorNombreApellido((const Entidad**)bibliotecarios, numBibliotecarios, nombreApellido);
+				}
+				break;
+				
+				
+				case 'X':
+				case 'x':
+					// Salir del submenú de búsquedas y volver al menú principal
+					break;
+				default:
+					cout << "Opción no válida. Inténtelo de nuevo." << endl;
+					break;
+				}
+			} while (subOpcionBusqueda != 'X' && subOpcionBusqueda != 'x');
+			break;
+		case '0':
+			cout << "Saliendo del programa. ¡Hasta luego!" << endl;
+			break;
+		default:
+			cout << "Opción no válida. Inténtelo de nuevo." << endl;
+			break;
+		}
+	} while (opcion != '0');
+	
+	// Liberar memoria
+	for (int i = 0; i < numLibros; ++i) {
+		delete libros[i];
+	}
+	for (int i = 0; i < numUsuarios; ++i) {
+		delete usuarios[i];
+	}
+	for (int i = 0; i < numBibliotecarios; ++i) {
+		delete bibliotecarios[i];
+	}
+	
+	return 0;
+}
